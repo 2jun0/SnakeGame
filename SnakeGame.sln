@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "SnakeGame", "SnakeGame\SnakeGame.pyproj", "{E1401241-3C43-4439-B1D8-D4C1CA302276}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E1401241-3C43-4439-B1D8-D4C1CA302276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1401241-3C43-4439-B1D8-D4C1CA302276}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {733DED74-65FD-41E3-B78A-A706095536AD}
+	EndGlobalSection
+EndGlobal
