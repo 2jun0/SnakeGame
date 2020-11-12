@@ -3,12 +3,17 @@ from config import *
 from snake import Label, LABEL2COLOR
 
 class Painter:
-	def open_display(self):
+	__slots__ = ['training', 'steps', 'DISPLAYSURF']
+
+	def open_display(self, training: bool = False):
 		pygame.init()
 		#set window size
 		self.DISPLAYSURF = pygame.display.set_mode((DISPLAY_WIDTH,DISPLAY_HEIGHT))
 		#set window menu bar name
 		pygame.display.set_caption('Snake game')
+
+		self.training = training
+		self.steps = 0
 
 	def close_display(self):
 		pygame.quit()
@@ -29,6 +34,13 @@ class Painter:
 		
 		scoreText = font20Obj.render("점수 : "+str(score), True, WHITE)
 		self.DISPLAYSURF.blit(scoreText, (DISPLAY_WIDTH - 60, 0))
+
+		if self.training:
+			text1 = font20Obj.render("P: 넘기기", True, WHITE)
+			self.DISPLAYSURF.blit(text1, (10, DISPLAY_HEIGHT - 30))
+
+			text2 = font20Obj.render(f'{self.steps} steps', True, WHITE)
+			self.DISPLAYSURF.blit(text2, (10, 0))
 		
 		# draw game objects
 		for x in range(GAME_MAP_WIDTH):

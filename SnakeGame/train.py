@@ -3,7 +3,7 @@ from SnakeGame import SnakeGame
 from trainer import DQNTrainer
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--checkpoint', type=str, default=None)
+parser.add_argument('-c', '--checkpoint', type=str, default=None)
 
 args = parser.parse_args()
 
@@ -15,9 +15,9 @@ def main():
 	if args.checkpoint:
 		trainer.load(suffix=args.checkpoint)
 		trainer.preview(10)
-
-	trainer.train()
-	pass
+		trainer.train(int(args.checkpoint))
+	else:
+		trainer.train()
 
 if __name__=="__main__":
 	main()

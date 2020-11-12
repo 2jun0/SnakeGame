@@ -92,8 +92,10 @@ class SnakeGame:
 
 	def get_state(self):
 		food_indicator_map = self.get_food_indicator_map()
-
-		return food_indicator_map
+		snake_direction_map = np.zeros(4)
+		snake_direction_map[self.snake.direction] = 1
+		
+		return np.concatenate((food_indicator_map, snake_direction_map))
 
 	def move_snake_forward(self):
 		# 뱀을 앞으로 움직이는 함수.
@@ -129,17 +131,12 @@ class SnakeGame:
 
 	def _random_food_appear(self):
 		# 음식을 랜덤한 위치에 발생시키는 함수
-		x = int(random.randrange(0, GAME_MAP_WIDTH))
-		y = int(random.randrange(0, GAME_MAP_HEIGHT))
-		for i in range(GAME_MAP_WIDTH*GAME_MAP_HEIGHT):
+		
+		while True:
+			x = random.randint(0,GAME_MAP_WIDTH-1)
+			y = random.randint(0,GAME_MAP_HEIGHT-1)
 			if self.map[x,y] == Label.BLANK:
 				break
-
-			x += 1
-			if x > GAME_MAP_WIDTH:
-				y += 1 
-			x %= GAME_MAP_WIDTH
-			y %= GAME_MAP_HEIGHT
 
 		self.food_coord = (x, y)
 		self.map[self.food_coord] = Label.FOOD
