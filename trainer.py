@@ -5,18 +5,18 @@ import pygame
 import sys
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-from snake import NUM_ACTIONS
+from snake import NUM_ACTIONS, NUM_LABELS
 from agent import DQNAgent
 
-CNN_STATE_SIZE = 5
-FC_STATE_SIZE = 8
+CNN_STATE_SHAPE = (5, 5, NUM_LABELS)
+FC_STATE_SHAPE = (8,)
 
 class DQNTrainer:
   def __init__(self,
         env,
         name:str,
-        num_episode=200, 
-        max_steps=300,
+        num_episode=300, 
+        max_steps=100,
         enable_draw =True,
         draw_freq = 100,
         draw_fps=20,
@@ -35,8 +35,8 @@ class DQNTrainer:
     self.save_freq = save_freq
 
     self.agent = DQNAgent(
-      cnn_state_size=CNN_STATE_SIZE,
-      fc_state_size=FC_STATE_SIZE,
+      cnn_state_shape=CNN_STATE_SHAPE,
+      fc_state_shape=FC_STATE_SHAPE,
       action_size=NUM_ACTIONS
     )
     self.env = env
@@ -59,8 +59,11 @@ class DQNTrainer:
 
     # num_episode만큼 반복
     while current_episode < self.num_episode:
-      state = self.env.reset() 
-      state = np.reshape(state, [1, STATE_SIZE])
+      state = self.env.reset()
+      # state를 cnn과 fc로 분리
+      cnn_states, fc_states = state
+      cnn_states = np.reshape(cnn_states, (1,) + CNN_STATE_SHAPE)
+      fc_states = np.reshape(fc_states, (1,) + FC_STATE_SHAPE)
 
       done = False
       steps = 0
@@ -68,14 +71,18 @@ class DQNTrainer:
 
       # 게임이 끝나거나, 게임 턴이 만료되었을때까지
       while not done and steps < self.max_steps:
-        action = self.agent.get_action(state)
+        action = self.agent.get_action([cnn_states, fc_states])
         next_state, reward, done = self.env.step(action)
-        next_state = np.reshape(next_state, [1, STATE_SIZE])
-        # 에피소드가 중간에 끝나면 -100보상
+        # next_state를 cnn과 fc로 분리
+        next_cnn_states, next_fc_states = next_state
+        next_cnn_states = np.reshape(next_cnn_states, (1,) + CNN_STATE_SHAPE)
+        next_fc_states = np.reshape(next_fc_states, (1,) + FC_STATE_SHAPE)
+        
+        # 에피소드가 중간에 끝나면 -10보상
         reward = reward if not done else -10
 
         # 리플레이 메모리에 결과 저장
-        self.agent.update_replay_memory(state, action, reward, next_state, done)
+        self.agent.update_replay_memory([cnn_states, fc_states], action, reward, [next_cnn_states, next_fc_states], done)
 
         if self.max_score < reward:
           self.max_score = reward
@@ -88,7 +95,8 @@ class DQNTrainer:
         if reward > 0:
           score += 1
         
-        state = next_state
+        cnn_states = next_cnn_states
+        fc_states = next_fc_states
 
         for event in pygame.event.get():
           # 종료

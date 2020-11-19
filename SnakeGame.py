@@ -92,10 +92,9 @@ class SnakeGame:
 
   def get_state(self):
     food_indicator_map = self.get_food_indicator_map()
-    snake_direction_map = np.zeros(4)
-    snake_direction_map[self.snake.direction] = 1
+    snake_vision_map = np.eye(NUM_LABELS)[self.get_snake_vision_map()]
     
-    return np.concatenate((food_indicator_map, snake_direction_map))
+    return snake_vision_map, food_indicator_map
 
   def move_snake_forward(self):
     # 뱀을 앞으로 움직이는 함수.

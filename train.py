@@ -15,7 +15,7 @@ def main():
 
   if args.checkpoint:
     trainer.load(suffix=args.checkpoint)
-    trainer.preview(10)
+    # trainer.preview(10)
     trainer.train(int(args.checkpoint))
   else:
     trainer.train()
